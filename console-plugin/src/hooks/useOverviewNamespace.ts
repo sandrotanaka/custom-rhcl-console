@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useLocation, useHistory } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom-v5-compat';
 
 /**
  * Namespace filter for the Overview page.
@@ -38,7 +38,7 @@ export function useOverviewNamespace(): {
   setNamespace: (ns: string | null) => void;
 } {
   const location = useLocation();
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const [namespace, setNamespaceState] = React.useState<string | null>(() =>
     readInitial(location.search),
@@ -73,10 +73,13 @@ export function useOverviewNamespace(): {
         params.set(URL_PARAM, ns);
       }
       const nextSearch = params.toString();
-      history.replace({
+      navigate(
+        {
         pathname: location.pathname,
         search: nextSearch ? `?${nextSearch}` : '',
-      });
+        },
+        { replace: true },
+      );
 
       // localStorage — cache for next entry.
       try {
@@ -86,7 +89,7 @@ export function useOverviewNamespace(): {
         // Same reason as above: storage may be unavailable.
       }
     },
-    [history, location.pathname, location.search],
+    [navigate, location.pathname, location.search],
   );
 
   return { namespace, setNamespace };

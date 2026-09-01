@@ -13,7 +13,7 @@ import {
   Tooltip,
 } from '@patternfly/react-core';
 import { OutlinedQuestionCircleIcon } from '@patternfly/react-icons';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom-v5-compat';
 import {
   k8sGet,
   k8sList,
@@ -392,7 +392,7 @@ interface Props {
 }
 
 const APIProductCascadeDelete: React.FC<Props> = ({ namespace, name, isOpen, onClose }) => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const [loading, setLoading] = React.useState(false);
   const [refs, setRefs] = React.useState<DeletableRef[] | null>(null);
   const [includeOptional, setIncludeOptional] = React.useState(true);
@@ -439,7 +439,7 @@ const APIProductCascadeDelete: React.FC<Props> = ({ namespace, name, isOpen, onC
     // Kick to the list if we just finished a successful teardown so
     // the operator lands on the refreshed page.
     if (wasSuccess) {
-      history.push('/connectivity-link/api-products');
+      navigate('/connectivity-link/api-products');
     }
   };
 

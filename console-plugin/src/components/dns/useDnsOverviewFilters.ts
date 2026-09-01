@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useLocation, useHistory } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom-v5-compat';
 
 /**
  * Filter state for the DNS Overview page.
@@ -55,7 +55,7 @@ function readFromSearch(search: string): DnsOverviewFilters {
 
 export function useDnsOverviewFilters() {
   const location = useLocation();
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const [filters, setFilters] = React.useState<DnsOverviewFilters>(() =>
     readFromSearch(location.search),
@@ -84,14 +84,17 @@ export function useDnsOverviewFilters() {
           else q.set(param, String(v));
         }
         const s = q.toString();
-        history.replace({
+        navigate(
+          {
           pathname: location.pathname,
           search: s ? `?${s}` : '',
-        });
+          },
+          { replace: true },
+        );
         return next;
       });
     },
-    [history, location.pathname, location.search],
+    [navigate, location.pathname, location.search],
   );
 
   const clearAll = React.useCallback(() => {
@@ -99,8 +102,8 @@ export function useDnsOverviewFilters() {
     // Wipe the whole query string; anything else (e.g. `hostname=` set
     // by a deep link) is filter noise now that the operator asked for
     // "everything".
-    history.replace({ pathname: location.pathname, search: '' });
-  }, [history, location.pathname]);
+    navigate({ pathname: location.pathname, search: '' }, { replace: true });
+  }, [navigate, location.pathname]);
 
   return { filters, applyOne, clearAll };
 }

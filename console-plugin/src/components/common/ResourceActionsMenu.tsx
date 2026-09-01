@@ -14,7 +14,7 @@ import {
   Content,
 } from '@patternfly/react-core';
 import { EllipsisVIcon } from '@patternfly/react-icons';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom-v5-compat';
 import { useTranslation } from 'react-i18next';
 import { k8sDelete, K8sResourceCommon } from '@openshift-console/dynamic-plugin-sdk';
 import ResourceEditorModal from './ResourceEditorModal';
@@ -106,7 +106,7 @@ const ResourceActionsMenu: React.FC<ResourceActionsMenuProps> = ({
   topItems,
 }) => {
   const { t } = useTranslation('plugin__kuadrant-console');
-  const history = useHistory();
+  const navigate = useNavigate();
   const [open, setOpen] = React.useState(false);
   const [confirming, setConfirming] = React.useState(false);
   const [deleting, setDeleting] = React.useState(false);
@@ -162,7 +162,7 @@ const ResourceActionsMenu: React.FC<ResourceActionsMenuProps> = ({
         },
       });
       setConfirming(false);
-      history.push(listHref);
+      navigate(listHref);
     } catch (err) {
       // eslint-disable-next-line no-console
       console.error('[ResourceActionsMenu] delete failed', err);

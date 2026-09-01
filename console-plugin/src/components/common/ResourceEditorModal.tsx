@@ -19,7 +19,7 @@ import {
   K8sResourceCommon,
 } from '@openshift-console/dynamic-plugin-sdk';
 import { load as yamlLoad, dump as yamlDump } from 'js-yaml';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom-v5-compat';
 import { useTranslation } from 'react-i18next';
 import AuthPolicyForm from './forms/AuthPolicyForm';
 import RateLimitPolicyForm from './forms/RateLimitPolicyForm';
@@ -61,7 +61,7 @@ const FORMS_BY_KIND: Record<string, React.FC<{ yaml: string; onChange: (yaml: st
  *     two nearly-identical widgets in sync. `mode` toggles which SDK
  *     verb runs and whether the YAML seed is a starter template or the
  *     existing resource dumped back out.
- *   - **Redirect on success** goes through `history.push` — kept inside
+ *   - **Redirect on success** goes through `navigate` — kept inside
  *     the plugin's router so we don't blink into Console's native page
  *     while the operator is mid-flow. Callers pass `redirectTo` (usually
  *     the resource's detail path). On Edit we default to the current
@@ -139,7 +139,7 @@ const ResourceEditorModal: React.FC<ResourceEditorModalProps> = ({
   onClose,
 }) => {
   const { t } = useTranslation('plugin__kuadrant-console');
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const [tab, setTab] = React.useState<'form' | 'yaml'>('yaml');
   const [yaml, setYaml] = React.useState<string>('');
@@ -247,7 +247,7 @@ const ResourceEditorModal: React.FC<ResourceEditorModalProps> = ({
       }
       onClose();
       if (redirectTo) {
-        history.push(redirectTo);
+        navigate(redirectTo);
       }
     } catch (e) {
       // Log the raw error to the browser console — the API server's
