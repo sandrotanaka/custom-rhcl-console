@@ -91,7 +91,12 @@ const CreateApiWizard: React.FC = () => {
           state.backends.every((b) => !!(b.namespace && b.name && b.port))
         );
       case 'gateway':
-        return state.useExistingGateway ? !!state.existingGatewayName : !!state.gatewayName;
+        // A new Gateway has no wildcard to inherit, so it needs an explicit
+        // hostname — otherwise the generated listener/HTTPRoute get host="" and
+        // the generated TLSPolicy is invalid. An existing Gateway can inherit.
+        return state.useExistingGateway
+          ? !!state.existingGatewayName
+          : !!(state.gatewayName && state.hostname);
       case 'routes':
         return state.routes.length > 0 && state.routes.every((r) => !!r.path);
       case 'security':
@@ -392,7 +397,7 @@ const ReviewStep: React.FC<{
           {state.authMode === 'api-key' && (
             <div className="rhcl-wiz-review-block">
               <div className="rhcl-wiz-review-title">Try it right away</div>
-              <div style={{ fontSize: 12, color: 'var(--pf-v5-global--Color--200)', marginBottom: 8 }}>
+              <div style={{ fontSize: 12, color: 'var(--pf-t--global--text--color--subtle)', marginBottom: 8 }}>
                 Generate a random API key alongside the policies and pre-fill the curl example on
                 the success screen so you can validate the endpoint without a trip to the developer
                 portal. Off in production — leave it on for lab / smoke tests.
@@ -405,7 +410,7 @@ const ReviewStep: React.FC<{
               />
               {state.generateTestApiKey && state.testApiKeyValue && (
                 <div style={{ marginTop: 8 }}>
-                  <div style={{ fontSize: 11, color: 'var(--pf-v5-global--Color--200)', marginBottom: 4 }}>
+                  <div style={{ fontSize: 11, color: 'var(--pf-t--global--text--color--subtle)', marginBottom: 4 }}>
                     Preview
                   </div>
                   <ClipboardCopy isReadOnly hoverTip="Copy key" clickTip="Copied">
@@ -417,7 +422,7 @@ const ReviewStep: React.FC<{
           )}
           {pct < 100 && (
             <Alert variant="warning" isInline title={`API readiness at ${pct}%`}>
-              Some optional capabilities are off — check the sidebar for what's missing. You can
+              Some optional capabilities are off — check the sidebar for what&apos;s missing. You can
               still create now and add policies later.
             </Alert>
           )}

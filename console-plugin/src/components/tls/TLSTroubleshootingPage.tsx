@@ -85,7 +85,7 @@ const TLSTroubleshootingPage: React.FC = () => {
               style={{
                 marginTop: 4,
                 fontSize: 14,
-                color: 'var(--pf-v5-global--Color--200)',
+                color: 'var(--pf-t--global--text--color--subtle)',
               }}
             >
               Diagnose certificate issuance, HTTPS connectivity and Gateway TLS configuration.
@@ -219,10 +219,7 @@ const TLSTroubleshootingPage: React.FC = () => {
             <TLSCertificateLifetimeCard cert={flow.certificate} />
           </GridItem>
           <GridItem lg={4} md={12}>
-            <TLSHTTPSValidationCard
-              hostname={flow.hostname}
-              handshakeExpectedOk={flow.overall.httpsCheck.status === 'healthy'}
-            />
+            <TLSHTTPSValidationCard hostname={flow.hostname} />
           </GridItem>
         </Grid>
       </PageSection>
